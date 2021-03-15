@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: echo "CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})" >> $GITHUB_ENV
+    - run: echo "CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})" >> $GITHUB_ENV
     - name: Display changed files
       run: echo $CHANGED_FILES
         
