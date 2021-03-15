@@ -38,7 +38,11 @@ jobs:
         pip install flake8
     - name: Lint with flake8
       run: |
-        echo "::set-output name=flake8-results::$(flake8 . --exit-zero)\n"
+        results=$(flake8 . --exit-zero)
+        results="${results//'%'/'%25'}"
+        results="${results//$'\n'/'%0A'}"
+        results="${results//$'\r'/'%0D'}"
+        echo "::set-output name=flake8-results::$results"
       id: lint_run
 
     - name: Slack Notification
