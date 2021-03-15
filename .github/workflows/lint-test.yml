@@ -30,7 +30,7 @@ jobs:
         pip install flake8
     - name: Lint with flake8
       run: |
-        results=$(flake8 ${{ $CHANGED_FILES }} --exit-zero)
+        results=$(flake8 ${{ env.CHANGED_FILES }} --exit-zero)
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
