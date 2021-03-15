@@ -9,3 +9,4 @@ print ('hello world')
 def JoeExotic(car, dog) :
     print(car)
 
+dog = 'bob'
