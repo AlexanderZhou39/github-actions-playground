@@ -23,13 +23,14 @@ jobs:
       run: |
         results=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})
         results="${results//'%'/'%25'}"
-        results="${results//$'\n'/' '}"
-        results="${results//$'\r'/' '}"
+        formated_results="${results//$'\n'/' '}"
+        formated_results="${fomated_results//$'\r'/' '}"
         echo "::set-output name=CHANGED_FILES::$results"
+        echo "::set-output name=CHANGED_FILES_F::$formated_results"
       id: changed_files
     
     - name: Display Changed Files
-      run: echo "${{ steps.changed_files.outputs.CHANGED_FILES }}"
+      run: echo "${{ steps.changed_files.outputs.CHANGED_FILES_F }}"
         
     - name: Set up Python 3.6
       uses: actions/setup-python@v2
@@ -42,24 +43,20 @@ jobs:
         pip install flake8
     - name: Lint with flake8
       run: |
-        results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES }} --exit-zero --config=.flake8)
+        results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES_F }} --exit-zero --config=.flake8)
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
-        echo "::set-output name=flake8-results::$results"
+        results_length=${#results}
+        echo "::set-output name=flake8_results::$results"
+        echo "::set-output name=results_length::$results_length"
       id: lint_run
 
     - name: Slack Notification
-      run: |
-        results=${{ steps.lint_run.outputs.flake8-results }}
-        result_length=${#results}
-        echo ${result_length}
-        files=${{ steps.changed_files.outputs.CHANGED_FILES }}
-        files="${files//' '/'%0A'}"
-      if: $result_length > 0
+      if: steps.lint_run.outputs.results_length > 0
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: Linter
-        SLACK_MESSAGE: "Checked files:\n ${{ $files }} \n Output:\n ${{ $results }}"
+        SLACK_MESSAGE: "Checked files:\n ${{ steps.changed_files.outputs.CHANGED_FILES }} \n Output:\n ${{ steps.lint_run.outputs.flake8_results }}"
         SLACK_TITLE: Lint Results
