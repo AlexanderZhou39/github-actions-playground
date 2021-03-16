@@ -11,4 +11,4 @@ def JoeExotic(car, dog) :
 
 dog = 'bob'
 
-child = 'doe'
+child = 'doe '
