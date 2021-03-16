@@ -42,7 +42,7 @@ jobs:
         pip install flake8
     - name: Lint with flake8
       run: |
-        results=$(flake8 . --exit-zero)
+        results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES }} --config=.flake8)
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
@@ -50,6 +50,7 @@ jobs:
       id: lint_run
 
     - name: Slack Notification
+      if: failure()
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
