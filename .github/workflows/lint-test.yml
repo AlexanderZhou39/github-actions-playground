@@ -25,8 +25,9 @@ jobs:
         echo ${results_o}
         results="${results//'%'/'%25'}"
         results="${results_o// /'%0A'}"
-        echo "CHANGED_FILES_F=${results}" >> $GITHUB_ENV
-        echo "CHANGED_FILES=${results_o}" >> $GITHUB_ENV
+        echo ${results}
+        echo "CHANGED_FILES_F='${results}'" >> $GITHUB_ENV
+        echo "CHANGED_FILES='${results_o}'" >> $GITHUB_ENV
         
       id: changed_files
     
