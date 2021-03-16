@@ -23,9 +23,9 @@ jobs:
       run: |
         results=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})
         results="${results//'%'/'%25'}"
-        results="${results//$'\n'/'%0A'}"
-        results="${results//$'\r'/'%0D'}"
-        echo "::set-output name=CHANGED_FILES::$results)"
+        results="${results//$'\n'/' '}"
+        results="${results//$'\r'/' '}"
+        echo "::set-output name=CHANGED_FILES::$results"
       id: changed_files
     
     - name: Display Changed Files
@@ -54,5 +54,5 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: Linter
-        SLACK_MESSAGE: "Checked files:\n none \n Output:\n ${{ steps.lint_run.outputs.flake8-results }}"
+        SLACK_MESSAGE: "Checked files:\n ${{ steps.changed_files.outputs.CHANGED_FILES }} \n Output:\n ${{ steps.lint_run.outputs.flake8-results }}"
         SLACK_TITLE: Lint Results
