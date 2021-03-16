@@ -17,9 +17,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: echo "CHANGED_FILES=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})" >> $GITHUB_ENV
+      with:
+        fetch-depth: 0
+    - run: echo "CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})" >> $GITHUB_ENV
     - name: Display changed files
-      run: git diff-tree --no-commit-id --name-only -r ${{ github.sha }}
+      run: echo $CHANGED_FILES
         
     - name: Set up Python 3.6
       uses: actions/setup-python@v2
