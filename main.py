@@ -6,7 +6,7 @@ print ('hello world' )
 
 #cheese
 
-def JoeExotic(car, dog ) :
+def JoeExotic(car, dog  ) :
     print(car)
 
 dog = 'bob '
