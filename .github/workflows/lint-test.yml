@@ -21,7 +21,7 @@ jobs:
         fetch-depth: 0
     - name: Get Changed Files
       run: |
-        results=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }}
+        results=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
