@@ -25,12 +25,12 @@ jobs:
         results="${results//'%'/'%25'}"
         formated_results="${results//$'\n'/' '}"
         formated_results="${fomated_results//$'\r'/' '}"
-        echo "::set-output name=CHANGED_FILES::$results"
-        echo "::set-output name=CHANGED_FILES_F::$formated_results"
+        echo "::set-output name=CHANGED_FILES::$formated_results"
+        echo "CHANGED_FILES_F=${results}" >> $GITHUB_ENV
       id: changed_files
     
     - name: Display Changed Files
-      run: echo "${{ steps.changed_files.outputs.CHANGED_FILES_F }}"
+      run: echo ${CHANGED_FILES_F}
         
     - name: Set up Python 3.6
       uses: actions/setup-python@v2
@@ -43,7 +43,7 @@ jobs:
         pip install flake8
     - name: Lint with flake8
       run: |
-        results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES_F }} --exit-zero --config=.flake8)
+        results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES }} --exit-zero --config=.flake8)
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
@@ -58,5 +58,5 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: Linter
-        SLACK_MESSAGE: "Checked files:\n ${{ steps.changed_files.outputs.CHANGED_FILES }} \n Output:\n ${{ steps.lint_run.outputs.flake8_results }}"
+        SLACK_MESSAGE: "Checked files:\n ${{ $CHANGED_FILES_F }} \n Output:\n ${{ steps.lint_run.outputs.flake8_results }}"
         SLACK_TITLE: Lint Results
