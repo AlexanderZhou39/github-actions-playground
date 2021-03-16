@@ -23,17 +23,11 @@ jobs:
       run: |
         results_o=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})
         results="${results_o//'%'/'%25'}"
+        results="${results//$' '/'\n'}"
         echo ${results_o}
-        results="${results//$'\n'/'%0A'}"
-        results="${results//$'\r'/'%0D'}"
         echo ${results}
         echo "CHANGED_FILES_F=${results}" >> $GITHUB_ENV
-
-        formated_results="${results_o//'%'/'%25'}"
-        formated_results="${fomated_results//$'\n'/' '}"
-        formated_results="${fomated_results//$'\r'/' '}"
-        echo ${formated_results}
-        echo "CHANGED_FILES=${formated_results}" >> $GITHUB_ENV
+        echo "CHANGED_FILES=${results_o}" >> $GITHUB_ENV
         
       id: changed_files
     
