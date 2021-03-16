@@ -19,7 +19,12 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - run: echo "CHANGED_FILES=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})" >> $GITHUB_ENV
+    - name: Get Changed Files
+      run: echo "::set-output name=CHANGED_FILES::$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})"
+      id: changed_files
+    
+    - name: Display Changed Files
+      run: echo steps.changed_files.outputs.*
         
     - name: Set up Python 3.6
       uses: actions/setup-python@v2
@@ -32,7 +37,7 @@ jobs:
         pip install flake8
     - name: Lint with flake8
       run: |
-        results=$(flake8 $CHANGED_FILES --exit-zero)
+        results=$(flake8 . --exit-zero)
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
@@ -44,5 +49,5 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: Linter
-        SLACK_MESSAGE: "Checked files:\n $CHANGED_FILES \n Output:\n ${{ join(steps.lint_run.outputs.*, '\n') }}"
+        SLACK_MESSAGE: "Checked files:\n none \n Output:\n ${{ join(steps.lint_run.outputs.*, '\n') }}"
         SLACK_TITLE: Lint Results
