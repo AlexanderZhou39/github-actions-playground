@@ -25,6 +25,8 @@ jobs:
         results="${results//'%'/'%25'}"
         formated_results="${results//$'\n'/' '}"
         formated_results="${fomated_results//$'\r'/' '}"
+        results="${results//$'\n'/'%0A'}"
+        results="${results//$'\r'/'%0D'}"
         echo "::set-output name=CHANGED_FILES::$formated_results"
         echo "CHANGED_FILES_F=${results}" >> $GITHUB_ENV
       id: changed_files
