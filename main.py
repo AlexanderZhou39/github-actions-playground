@@ -2,7 +2,7 @@ import sys
 
 #bad syntax
 
-print ('hello world')
+print ('hello world' )
 
 #cheese
 
