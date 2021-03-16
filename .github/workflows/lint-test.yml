@@ -23,6 +23,7 @@ jobs:
       run: |
         results_o=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})
         results="${results_o//'%'/'%25'}"
+        echo ${results_o}
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
         echo ${results}
