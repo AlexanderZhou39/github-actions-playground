@@ -22,10 +22,8 @@ jobs:
     - name: Get Changed Files
       run: |
         results_o=$(git diff --name-only ${{ github.event.before }}..${{ github.event.after }})
-        results="${results_o//'%'/'%25'}"
-        results="${results//' '/' %0A '}"
         echo ${results_o}
-        echo ${results}
+        echo "${results_o}" | tr " " "\n"
         echo "CHANGED_FILES_F=${results}" >> $GITHUB_ENV
         echo "CHANGED_FILES=${results_o}" >> $GITHUB_ENV
         
