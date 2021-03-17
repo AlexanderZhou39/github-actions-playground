@@ -27,7 +27,8 @@ jobs:
 
     - name: Get Changed Files
       run: |
-        results_o=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+        git fetch origin master:master
+        results_o=$(git diff --no-commit-id --name-only -r master)
         results="${results_o//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
