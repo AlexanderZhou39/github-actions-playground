@@ -26,7 +26,8 @@ jobs:
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
 
-        results_o="${results//$'\n'/ }"
+        results_o="${results_o//'%'/'%25'}"
+        results_o="${results_o//$'\n'/ }"
         results_o="${results_o//$'\r'/ }"
         # echo ${results}
         # echo ${results_o}
