@@ -21,29 +21,29 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Get Changed Files
-      run: |
-        results_o=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
-        results="${results_o//'%'/'%25'}"
-        results="${results//$'\n'/'%0A'}"
-        results="${results//$'\r'/'%0D'}"
+      # with:
+      #   fetch-depth: 0
+    # - name: Get Changed Files
+    #   run: |
+    #     results_o=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+    #     results="${results_o//'%'/'%25'}"
+    #     results="${results//$'\n'/'%0A'}"
+    #     results="${results//$'\r'/'%0D'}"
 
-        results_o="${results_o//'%'/'%25'}"
-        results_o="${results_o//$'\n'/ }"
-        results_o="${results_o//$'\r'/ }"
-        # echo ${results}
-        # echo ${results_o}
-        echo "::set-output name=CHANGED_FILES_F::$results"
-        echo "::set-output name=CHANGED_FILES::$results_o"
+    #     results_o="${results_o//'%'/'%25'}"
+    #     results_o="${results_o//$'\n'/ }"
+    #     results_o="${results_o//$'\r'/ }"
+    #     # echo ${results}
+    #     # echo ${results_o}
+    #     echo "::set-output name=CHANGED_FILES_F::$results"
+    #     echo "::set-output name=CHANGED_FILES::$results_o"
         
-      id: changed_files
+      # id: changed_files
     
-    - name: Display Changed Files
-      run: |
-        echo '${{ steps.changed_files.outputs.CHANGED_FILES_F }}'
-        echo '${{ steps.changed_files.outputs.CHANGED_FILES }}'
+    # - name: Display Changed Files
+    #   run: |
+    #     echo '${{ steps.changed_files.outputs.CHANGED_FILES_F }}'
+    #     echo '${{ steps.changed_files.outputs.CHANGED_FILES }}'
         
     - name: Set up Python 3.6
       uses: actions/setup-python@v2
@@ -56,7 +56,8 @@ jobs:
         pip install flake8
     - name: Lint with flake8
       run: |
-        results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES }} --exit-zero --config=.flake8)
+        # results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES }} --exit-zero --config=.flake8)
+        results=$(flake8 . --exit-zero --config=.flake8)
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
@@ -75,7 +76,7 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: "## Auto Linter Output:\n ```${{ steps.lint_run.outputs.flake8_results }}```"
+            body: "## Auto Linter Output:\n ${{ steps.lint_run.outputs.flake8_results }}"
           })
 
 
