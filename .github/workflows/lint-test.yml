@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-lint:
+  run-lint:
 
     runs-on: ubuntu-latest
 
@@ -29,7 +29,7 @@ jobs:
       run: |
         # results_o=$(git diff --no-commit-id --name-only -r master)
         URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files"
-        results_o=$(curl -s -X GET -G $URL | jq -r '.[] | .filename')
+        results_o=$(curl -s -X GET -G -u username:${{ secrets.LINT_PAT }} $URL | jq -r '.[] | .filename')
         results="${results_o//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
