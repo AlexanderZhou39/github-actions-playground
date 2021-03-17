@@ -21,29 +21,28 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      # with:
-      #   fetch-depth: 0
-    # - name: Get Changed Files
-    #   run: |
-    #     results_o=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
-    #     results="${results_o//'%'/'%25'}"
-    #     results="${results//$'\n'/'%0A'}"
-    #     results="${results//$'\r'/'%0D'}"
+      with:
+        fetch-depth: 0
+    - name: Get Changed Files
+      run: |
+        results_o=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
+        results="${results_o//'%'/'%25'}"
+        results="${results//$'\n'/'%0A'}"
+        results="${results//$'\r'/'%0D'}"
 
-    #     results_o="${results_o//'%'/'%25'}"
-    #     results_o="${results_o//$'\n'/ }"
-    #     results_o="${results_o//$'\r'/ }"
-    #     # echo ${results}
-    #     # echo ${results_o}
-    #     echo "::set-output name=CHANGED_FILES_F::$results"
-    #     echo "::set-output name=CHANGED_FILES::$results_o"
-        
-      # id: changed_files
+        results_o="${results_o//'%'/'%25'}"
+        results_o="${results_o//$'\n'/ }"
+        results_o="${results_o//$'\r'/ }"
+        # echo ${results}
+        # echo ${results_o}
+        echo "::set-output name=CHANGED_FILES_F::$results"
+        echo "::set-output name=CHANGED_FILES::$results_o"
+      id: changed_files
     
-    # - name: Display Changed Files
-    #   run: |
-    #     echo '${{ steps.changed_files.outputs.CHANGED_FILES_F }}'
-    #     echo '${{ steps.changed_files.outputs.CHANGED_FILES }}'
+    - name: Display Changed Files
+      run: |
+        echo '${{ steps.changed_files.outputs.CHANGED_FILES_F }}'
+        echo '${{ steps.changed_files.outputs.CHANGED_FILES }}'
         
     - name: Set up Python 3.6
       uses: actions/setup-python@v2
@@ -65,20 +64,24 @@ jobs:
         echo "::set-output name=flake8_results::$results"
         echo "::set-output name=results_length::$results_length"
       id: lint_run
-    
-    - name: Comment on PR
+
+    - name: Check for errors
+      run: echo "${{ steps.lint_run.outputs.flake8_results }}"
       if: steps.lint_run.outputs.results_length > 0
-      uses: actions/github-script@v3
-      with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            # body: "## Auto Linter Output:\n ${{ steps.lint_run.outputs.flake8_results }}"
-            body: "hello world"
-          })
+      run: exit 1
+    
+    # - name: Comment on PR
+    #   if: steps.lint_run.outputs.results_length > 0
+    #   uses: actions/github-script@v3
+    #   with:
+    #     github-token: ${{secrets.GITHUB_TOKEN}}
+    #     script: |
+    #       await github.issues.createComment({
+    #         issue_number: context.issue.number,
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         body: "hello world"
+    #       })
 
 
     # - name: Slack Notification
