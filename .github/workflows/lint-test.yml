@@ -4,10 +4,14 @@
 name: Auto-lint
 
 on:
-  push:
+  # push:
+  #   branches:
+  #     - main
+  #     - "*/*"
+  pull_request:
     branches:
       - main
-      - "*/*"
+      - master
   workflow_dispatch:
 
 jobs:
@@ -60,12 +64,26 @@ jobs:
         echo "::set-output name=flake8_results::$results"
         echo "::set-output name=results_length::$results_length"
       id: lint_run
-
-    - name: Slack Notification
+    
+    - name: Comment on PR
       if: steps.lint_run.outputs.results_length > 0
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_USERNAME: Linter
-        SLACK_MESSAGE: "\n*Checked files:*\n ${{ steps.changed_files.outputs.CHANGED_FILES_F }} \n\n *Output:*\n ${{ steps.lint_run.outputs.flake8_results }}"
-        SLACK_TITLE: Lint Results
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: "## Auto Linter Output:\n ```${{ steps.lint_run.outputs.flake8_results }}```"
+          })
+
+
+    # - name: Slack Notification
+    #   if: steps.lint_run.outputs.results_length > 0
+    #   uses: rtCamp/action-slack-notify@v2
+    #   env:
+    #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+    #     SLACK_USERNAME: Linter
+    #     SLACK_MESSAGE: "\n*Checked files:*\n ${{ steps.changed_files.outputs.CHANGED_FILES_F }} \n\n *Output:*\n ${{ steps.lint_run.outputs.flake8_results }}"
+    #     SLACK_TITLE: Lint Results
