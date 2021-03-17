@@ -67,5 +67,5 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: Linter
-        SLACK_MESSAGE: "Checked files:\n ${{ steps.changed_files.outputs.CHANGED_FILES_F }} \n Output:\n ${{ steps.lint_run.outputs.flake8_results }}"
+        SLACK_MESSAGE: "\n*Checked files:*\n ${{ steps.changed_files.outputs.CHANGED_FILES_F }} \n\n *Output:*\n ```${{ steps.lint_run.outputs.flake8_results }}"
         SLACK_TITLE: Lint Results
