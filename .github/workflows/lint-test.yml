@@ -65,10 +65,11 @@ jobs:
         echo "::set-output name=results_length::$results_length"
       id: lint_run
 
-    - name: Check for errors
-      run: echo "${{ steps.lint_run.outputs.flake8_results }}"
+    - name: Display Results if length > 0
       if: steps.lint_run.outputs.results_length > 0
-      run: exit 1
+      run: |
+        echo "${{ steps.lint_run.outputs.flake8_results }}"
+        exit 1
     
     # - name: Comment on PR
     #   if: steps.lint_run.outputs.results_length > 0
