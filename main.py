@@ -1,14 +1,2 @@
-import sys
+print('hello world')
 
-#bad syntax
-
-print ('hello world' )
-
-#cheese
-
-def JoeExotic(car, dog ) :
-    print(car)
-
-dog = 'bob '
-
-child = 'doe '
