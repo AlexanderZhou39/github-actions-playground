@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0
+        fetch-depth: 3
         ref: ${{ github.head_ref }}
 
     - name: Get Changed Files
