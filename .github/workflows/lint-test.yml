@@ -76,7 +76,8 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: "## Auto Linter Output:\n ${{ steps.lint_run.outputs.flake8_results }}"
+            # body: "## Auto Linter Output:\n ${{ steps.lint_run.outputs.flake8_results }}"
+            body: "hello world"
           })
 
 
