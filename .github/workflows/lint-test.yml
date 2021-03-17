@@ -4,14 +4,14 @@
 name: Auto-lint
 
 on:
-  push:
-    branches:
-      - main
-      - "*/*"
-  # pull_request:
+  # push:
   #   branches:
   #     - main
-  #     - master
+  #     - "*/*"
+  pull_request:
+    branches:
+      - main
+      - master
   workflow_dispatch:
 
 jobs:
@@ -23,6 +23,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        ref: ${{ github.head_ref }}
+
     - name: Get Changed Files
       run: |
         results_o=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }})
@@ -55,8 +57,8 @@ jobs:
         pip install flake8
     - name: Lint with flake8
       run: |
-        # results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES }} --exit-zero --config=.flake8)
-        results=$(flake8 . --exit-zero --config=.flake8)
+        results=$(flake8 ${{ steps.changed_files.outputs.CHANGED_FILES }} --exit-zero --config=.flake8)
+        # results=$(flake8 . --exit-zero --config=.flake8)
         results="${results//'%'/'%25'}"
         results="${results//$'\n'/'%0A'}"
         results="${results//$'\r'/'%0D'}"
