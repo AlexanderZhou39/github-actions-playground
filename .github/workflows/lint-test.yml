@@ -4,14 +4,14 @@
 name: Auto-lint
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #     - "*/*"
-  pull_request:
+  push:
     branches:
       - main
-      - master
+      - "*/*"
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - master
   workflow_dispatch:
 
 jobs:
